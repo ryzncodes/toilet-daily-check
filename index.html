@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toilet Cleaning Checklist</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f2f6f4;
+    color: #22302a;
+    line-height: 1.5;
+    padding: 24px 16px 60px;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header.app-header {
+    background: #1f6f54;
+    color: #fff;
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+  header.app-header h1 { font-size: 1.5rem; font-weight: 700; }
+  header.app-header p { margin-top: 4px; font-size: 0.9rem; opacity: 0.9; }
+  .date-badge {
+    display: inline-block;
+    margin-top: 10px;
+    background: rgba(255,255,255,0.18);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
+
+  section.card {
+    background: #fff;
+    border: 1px solid #dbe5e0;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(30,60,45,0.06);
+  }
+  section.card h2 {
+    font-size: 1.1rem;
+    color: #1f6f54;
+    margin-bottom: 4px;
+  }
+  section.card .purpose {
+    font-size: 0.85rem;
+    color: #6b7d75;
+    margin-bottom: 14px;
+  }
+
+  /* Checklist */
+  ul.task-list { list-style: none; }
+  ul.task-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 10px;
+    border-bottom: 1px solid #eef3f0;
+  }
+  ul.task-list li:last-child { border-bottom: none; }
+  ul.task-list input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #1f6f54;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  ul.task-list label {
+    cursor: pointer;
+    flex: 1;
+    font-size: 0.98rem;
+  }
+  ul.task-list li.done label {
+    text-decoration: line-through;
+    color: #8ba39a;
+  }
+  .task-time {
+    font-size: 0.78rem;
+    color: #6b7d75;
+    background: #eef5f2;
+    padding: 2px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  /* Progress */
+  .progress-bar-track {
+    background: #e3ece8;
+    border-radius: 999px;
+    height: 14px;
+    overflow: hidden;
+    margin: 10px 0 14px;
+  }
+  .progress-bar-fill {
+    background: #1f6f54;
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .progress-summary {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #22302a;
+  }
+  .progress-cols {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .progress-box {
+    flex: 1;
+    min-width: 200px;
+    border: 1px solid #dbe5e0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: #f8fbf9;
+  }
+  .progress-box h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .progress-box.completed h3 { color: #1f6f54; }
+  .progress-box.remaining h3 { color: #b46a2c; }
+  .progress-box ul { list-style: none; font-size: 0.9rem; }
+  .progress-box ul li { padding: 3px 0; }
+  .progress-box .empty { color: #8ba39a; font-style: italic; }
+
+  /* Audit notes */
+  .audit-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .audit-form input[type="text"] {
+    flex: 1;
+    min-width: 220px;
+    padding: 10px 12px;
+    border: 1px solid #cfdcd6;
+    border-radius: 8px;
+    font-size: 0.95rem;
+  }
+  .audit-form input[type="text"]:focus {
+    outline: 2px solid #1f6f54;
+    border-color: #1f6f54;
+  }
+  .audit-form button {
+    background: #1f6f54;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .audit-form button:hover { background: #175a44; }
+  .form-hint {
+    font-size: 0.78rem;
+    color: #8ba39a;
+    margin-bottom: 14px;
+  }
+  ul.audit-list { list-style: none; }
+  ul.audit-list li {
+    border-left: 4px solid #1f6f54;
+    background: #f8fbf9;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+  }
+  ul.audit-list li.issue { border-left-color: #b4442c; }
+  .audit-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.78rem;
+    color: #6b7d75;
+    margin-bottom: 3px;
+    flex-wrap: wrap;
+  }
+  .audit-tag {
+    background: #eef5f2;
+    padding: 1px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  li.issue .audit-tag { background: #fbeee9; color: #b4442c; }
+  .audit-text { font-size: 0.95rem; }
+
+  footer.note {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #8ba39a;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app-header">
+    <h1>Toilet Cleaning Checklist</h1>
+    <p>For R&amp;R and F&amp;B workers — tick tasks as you clean, supervisors can add audit notes below.</p>
+    <span class="date-badge" id="todayDate"></span>
+  </header>
+
+  <!-- Section 1: Checklist -->
+  <section class="card" id="checklist-section">
+    <h2>1. Checklist</h2>
+    <p class="purpose">Today's cleaning tasks — tick each one when it is done.</p>
+    <ul class="task-list" id="taskList"></ul>
+  </section>
+
+  <!-- Section 2: Today's progress -->
+  <section class="card" id="progress-section">
+    <h2>2. Today's Progress</h2>
+    <p class="purpose">What is completed and what is still left, at a glance.</p>
+    <div class="progress-summary" id="progressSummary"></div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBarFill"></div></div>
+    <div class="progress-cols">
+      <div class="progress-box completed">
+        <h3>Completed</h3>
+        <ul id="completedList"></ul>
+      </div>
+      <div class="progress-box remaining">
+        <h3>Still to do</h3>
+        <ul id="remainingList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Audit notes -->
+  <section class="card" id="audit-section">
+    <h2>3. Audit Notes</h2>
+    <p class="purpose">Supervisor remarks — type a short note and it appears here straight away.</p>
+    <form class="audit-form" id="auditForm">
+      <input type="text" id="auditInput" placeholder="e.g. Sink area clean, soap dispenser refilled" autocomplete="off">
+      <button type="submit">Add note</button>
+    </form>
+    <p class="form-hint">Notes are for this visit only — nothing is saved between sessions.</p>
+    <ul class="audit-list" id="auditList"></ul>
+  </section>
+
+  <footer class="note">Sample data only — no information is stored or sent anywhere.</footer>
+</div>
+
+<script>
+  // ---- Example data (made up, Malaysia-specific) ----
+  const tasks = [
+    { id: 1, name: "Scrub toilet bowls (Block A surau toilet)", time: "8:00 AM", done: true },
+    { id: 2, name: "Refill hand soap & paper towels (Makan area toilet)", time: "9:30 AM", done: true },
+    { id: 3, name: "Mop floor & empty bins (R&R rest stop toilet)", time: "11:00 AM", done: false }
+  ];
+
+  const auditNotes = [
+    { text: "First round checked — floor dry, no foul smell at surau toilet.", author: "Supervisor En. Rahim", time: "9:45 AM", issue: false },
+    { text: "Water tap at cubicle 2 dripping slowly — reported to maintenance.", author: "Supervisor En. Rahim", time: "10:20 AM", issue: true },
+    { text: "Soap dispenser refilled on schedule, stock sufficient for today.", author: "Supervisor Puan Aida", time: "12:05 PM", issue: false }
+  ];
+
+  // ---- Today's date badge ----
+  const today = new Date().toLocaleDateString("en-MY", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  });
+  document.getElementById("todayDate").textContent = today;
+
+  // ---- Render checklist ----
+  function renderTasks() {
+    const list = document.getElementById("taskList");
+    list.innerHTML = "";
+    tasks.forEach(task => {
+      const li = document.createElement("li");
+      li.className = task.done ? "done" : "";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = task.done;
+      cb.id = "task-" + task.id;
+      cb.addEventListener("change", () => {
+        task.done = cb.checked;
+        renderTasks();
+        renderProgress();
+      });
+
+      const label = document.createElement("label");
+      label.htmlFor = "task-" + task.id;
+      label.textContent = task.name;
+
+      const time = document.createElement("span");
+      time.className = "task-time";
+      time.textContent = task.time;
+
+      li.appendChild(cb);
+      li.appendChild(label);
+      li.appendChild(time);
+      list.appendChild(li);
+    });
+  }
+
+  // ---- Render progress (updates straight away on tick/untick) ----
+  function renderProgress() {
+    const done = tasks.filter(t => t.done);
+    const left = tasks.filter(t => !t.done);
+    const pct = tasks.length === 0 ? 0 : Math.round((done.length / tasks.length) * 100);
+
+    document.getElementById("progressSummary").textContent =
+      done.length + " of " + tasks.length + " tasks completed (" + pct + "%)";
+    document.getElementById("progressBarFill").style.width = pct + "%";
+
+    const doneUl = document.getElementById("completedList");
+    doneUl.innerHTML = done.length
+      ? done.map(t => "<li>✅ " + t.name + "</li>").join("")
+      : '<li class="empty">Nothing completed yet.</li>';
+
+    const leftUl = document.getElementById("remainingList");
+    leftUl.innerHTML = left.length
+      ? left.map(t => "<li>⬜ " + t.name + "</li>").join("")
+      : '<li class="empty">All tasks done — great work!</li>';
+  }
+
+  // ---- Render audit notes ----
+  function renderAudit() {
+    const ul = document.getElementById("auditList");
+    ul.innerHTML = "";
+    auditNotes.forEach(note => {
+      const li = document.createElement("li");
+      if (note.issue) li.className = "issue";
+
+      const meta = document.createElement("div");
+      meta.className = "audit-meta";
+      const tag = document.createElement("span");
+      tag.className = "audit-tag";
+      tag.textContent = note.issue ? "Issue found" : "Checked OK";
+      const author = document.createElement("span");
+      author.textContent = note.author;
+      const when = document.createElement("span");
+      when.textContent = note.time;
+      meta.appendChild(tag);
+      meta.appendChild(author);
+      meta.appendChild(when);
+
+      const text = document.createElement("div");
+      text.className = "audit-text";
+      text.textContent = note.text;
+
+      li.appendChild(meta);
+      li.appendChild(text);
+      ul.appendChild(li);
+    });
+  }
+
+  // ---- Quick audit entry: appears immediately on screen ----
+  document.getElementById("auditForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const input = document.getElementById("auditInput");
+    const text = input.value.trim();
+    if (!text) return;
+    const now = new Date().toLocaleTimeString("en-MY", { hour: "numeric", minute: "2-digit" });
+    const isIssue = /(issue|problem|rosak|pecah|kotor|baiki|report)/i.test(text);
+    auditNotes.unshift({ text: text, author: "Supervisor (you)", time: now, issue: isIssue });
+    input.value = "";
+    renderAudit();
+  });
+
+  // ---- Init: never opens blank ----
+  renderTasks();
+  renderProgress();
+  renderAudit();
+</script>
+</body>
+</html>
